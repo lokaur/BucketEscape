@@ -47,7 +47,7 @@ public class GameScreen implements Screen {
 	private void spawnEnemy() {
 		Enemy enemy = new Enemy();
 		enemy.x = MathUtils.random(0, 480 - 64);
-		enemy.y = 0;
+		enemy.y = -64;
 		enemy.width = 64;
 		enemy.height = 64;
 		enemies.add(enemy);
@@ -77,12 +77,13 @@ public class GameScreen implements Screen {
 		}
 		batch.end();
 
-		if (TimeUtils.nanoTime() - lastDropTime > 1000000000) spawnEnemy();
+		if (TimeUtils.nanoTime() - lastDropTime > 1000000000)
+			spawnEnemy();
 		Iterator<Enemy> iterator = enemies.iterator();
 		while (iterator.hasNext()) {
 			Enemy enemy = iterator.next();
 			enemy.y += 200 * Gdx.graphics.getDeltaTime();
-			if (enemy.y + 64 > 800) iterator.remove();
+			if (enemy.y > 800) iterator.remove();
 		}
 	}
 
