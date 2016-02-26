@@ -2,6 +2,7 @@ package ru.sbgames.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -28,6 +30,9 @@ public class GameScreen implements Screen {
 	private Vector3 touchPos;
 	private Array<Enemy> enemies;
 	private BitmapFont scoreFont;
+	private Sound hitSound;
+	private boolean isJustClicked;
+	private int dificult;
 
 	public GameScreen(final BucketEscape game) {
 		this.game = game;
@@ -35,12 +40,14 @@ public class GameScreen implements Screen {
 	}
 
 	private void init() {
+		dificult = 200;
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 480, 800);
 		touchPos = new Vector3();
 		backgroundSprite = new Sprite(new Texture("wall.png"));
 		scoreFont = game.generateFont(18);
 		enemies = new Array<Enemy>();
+		hitSound = Gdx.audio.newSound(Gdx.files.internal("hit.wav"));
 		spawnEnemy();
 	}
 
@@ -77,14 +84,36 @@ public class GameScreen implements Screen {
 		}
 		batch.end();
 
-		if (TimeUtils.nanoTime() - lastDropTime > 1000000000)
+		if (Gdx.input.isTouched()) {
+			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+			camera.unproject(touchPos);
+			isJustClicked = true;
+		}
+
+		if (TimeUtils.nanoTime() - lastDropTime > 1000000000) {
 			spawnEnemy();
+			if (dificult > 0)
+				dificult += 5;
+		}
+
 		Iterator<Enemy> iterator = enemies.iterator();
 		while (iterator.hasNext()) {
 			Enemy enemy = iterator.next();
-			enemy.y += 200 * Gdx.graphics.getDeltaTime();
-			if (enemy.y > 800) iterator.remove();
+			enemy.y += dificult * Gdx.graphics.getDeltaTime();
+			if (enemy.y > 800) {
+				iterator.remove();
+				game.setScore(score);
+				game.setScreen(new GameOverScreen(game));
+				dispose();
+			}
+
+			if (isJustClicked && enemy.overlaps(new Rectangle(touchPos.x, touchPos.y, 64, 64))) {
+				score++;
+				hitSound.play();
+				iterator.remove();
+			}
 		}
+		isJustClicked = false;
 	}
 
 	@Override
@@ -109,5 +138,6 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void dispose() {
+		hitSound.dispose();
 	}
 }

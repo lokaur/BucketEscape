@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 public class BucketEscape extends Game {
 
 	private SpriteBatch batch;
+	private int score;
 
 	@Override
 	public void create() {
@@ -44,5 +45,13 @@ public class BucketEscape extends Game {
 
 	public SpriteBatch getBatch() {
 		return batch;
+	}
+
+	public int getScore() {
+		return score;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
 	}
 }
