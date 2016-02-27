@@ -14,7 +14,7 @@ public class BucketEscape extends Game {
 
 	@Override
 	public void create() {
-		batch = new SpriteBatch();
+		batch = new SpriteBatch(); 
 
 		setScreen(new ru.sbgames.screens.MainMenuScreen(this));
 	}
