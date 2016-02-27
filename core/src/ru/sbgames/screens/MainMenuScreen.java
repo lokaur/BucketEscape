@@ -27,7 +27,7 @@ public class MainMenuScreen implements Screen {
 	private void init() {
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 480, 800);
-		backgroundTexture = new Texture("wall_menu.png");
+		backgroundTexture = new Texture("start.png");
 		backgroundSprite = new Sprite(backgroundTexture);
 		fontTitle = game.generateFont(42);
 		fontTapAnywhere = game.generateFont(18);

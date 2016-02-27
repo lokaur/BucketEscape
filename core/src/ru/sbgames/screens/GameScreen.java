@@ -32,7 +32,7 @@ public class GameScreen implements Screen {
 	private BitmapFont scoreFont;
 	private Sound hitSound;
 	private boolean isJustClicked;
-	private int dificult;
+	private int difficult;
 
 	public GameScreen(final BucketEscape game) {
 		this.game = game;
@@ -40,11 +40,11 @@ public class GameScreen implements Screen {
 	}
 
 	private void init() {
-		dificult = 200;
+		difficult = 200;
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 480, 800);
 		touchPos = new Vector3();
-		backgroundSprite = new Sprite(new Texture("wall.png"));
+		backgroundSprite = new Sprite(new Texture("play.png"));
 		scoreFont = game.generateFont(18);
 		enemies = new Array<Enemy>();
 		hitSound = Gdx.audio.newSound(Gdx.files.internal("hit.wav"));
@@ -92,14 +92,14 @@ public class GameScreen implements Screen {
 
 		if (TimeUtils.nanoTime() - lastDropTime > 1000000000) {
 			spawnEnemy();
-			if (dificult > 0)
-				dificult += 5;
+			if (difficult > 0)
+				difficult += 5;
 		}
 
 		Iterator<Enemy> iterator = enemies.iterator();
 		while (iterator.hasNext()) {
 			Enemy enemy = iterator.next();
-			enemy.y += dificult * Gdx.graphics.getDeltaTime();
+			enemy.y += difficult * Gdx.graphics.getDeltaTime();
 			if (enemy.y > 800) {
 				iterator.remove();
 				game.setScore(score);

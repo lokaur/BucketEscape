@@ -25,7 +25,7 @@ public class GameOverScreen implements Screen {
 
 	public GameOverScreen(BucketEscape game) {
 		this.game = game;
-		backgroundTexture = new Texture("wall_menu.png");
+		backgroundTexture = new Texture("start.png");
 		backgroundSprite = new Sprite(backgroundTexture);
 		looseSound = Gdx.audio.newSound(Gdx.files.internal("loose.wav"));
 		looseFont = game.generateFont(42);
